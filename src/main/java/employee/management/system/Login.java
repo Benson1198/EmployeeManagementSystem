@@ -1,10 +1,15 @@
 package employee.management.system;
 
+
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.sql.ResultSet;
 
-public class Login extends JFrame {
+public class Login extends JFrame implements ActionListener {
 
+    JTextField tfusername, tfpassword;
     Login(){
         getContentPane().setBackground(Color.WHITE);
         setLayout(null);
@@ -13,7 +18,7 @@ public class Login extends JFrame {
         lblusername.setBounds(40,20,100,30);
         add(lblusername);
 
-        JTextField tfusername = new JTextField();
+        tfusername = new JTextField();
         tfusername.setBounds(150,20,150,30);
         add(tfusername);
 
@@ -21,7 +26,7 @@ public class Login extends JFrame {
         lblpassword.setBounds(40,70,100,30);
         add(lblpassword);
 
-        JTextField tfpassword = new JTextField();
+        tfpassword = new JTextField();
         tfpassword.setBounds(150,70,150,30);
         add(tfpassword);
 
@@ -29,6 +34,7 @@ public class Login extends JFrame {
         login.setBounds(150, 140, 150, 30);
         login.setBackground(Color.black);
         login.setForeground(Color.WHITE);
+        login.addActionListener(this);
         add(login);
 
         ImageIcon imgIcon = new ImageIcon(ClassLoader.getSystemResource("icons/second.jpg"));
@@ -41,6 +47,28 @@ public class Login extends JFrame {
         setSize(600, 300);
         setLocation(450, 200);
         setVisible(true);
+    }
+
+    public void actionPerformed(ActionEvent ae){
+        try{
+            String username = tfusername.getText();
+            String password = tfpassword.getText();
+
+            Conn c = new Conn();
+            String query = "select * from login where username ='" + username + "' and password ='"+password+"'";
+
+            ResultSet rs = c.s.executeQuery(query);
+
+            if(rs.next()){
+                setVisible(false);
+                new Home();
+            }
+            else{
+                JOptionPane.showMessageDialog(null,"Invalid username or password");
+            }
+        }catch(Exception e){
+            e.printStackTrace();
+        }
     }
 
     public static void main(String[] args){
